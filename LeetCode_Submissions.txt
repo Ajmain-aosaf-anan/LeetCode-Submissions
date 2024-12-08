@@ -1,1 +1,1018 @@
+'Merge Sorted Array'
+
+from typing import List
+
+class Solution:
+  def merge(self, nums1: List[int], m: int, nums2: List[int], n: int) -> None:
+        p1, p2, p = m - 1, n - 1, m + n - 1
+        while p1 >= 0 and p2 >= 0:
+            if nums1[p1] > nums2[p2]:
+                nums1[p] = nums1[p1]
+                p1 -= 1
+            else:
+                nums1[p] = nums2[p2]
+                p2 -= 1
+            p -= 1
+        while p2 >= 0:
+            nums1[p] = nums2[p2]
+            p2 -= 1
+            p -= 1
+
+'Remove Element'
+
+from typing import List
+
+class Solution:
+    def removeElement(self, nums: List[int], val: int) -> int:
+        k = 0  # Pointer for the position to place non-val elements
+        for i in range(len(nums)):
+            if nums[i] != val:
+                nums[k] = nums[i]
+                k += 1
+        return k
+
+'Remove Duplicates from Sorted Array'
+
+from typing import List
+
+class Solution:
+    def removeDuplicates(self, nums: List[int]) -> int:
+        if not nums:
+            return 0
+
+        k = 1
+        for i in range(1, len(nums)):
+            if nums[i] != nums[i - 1]:
+                nums[k] = nums[i]
+                k += 1
+        return k
+
+# Example usage:
+solution = Solution()
+nums = [1,1,1,2,2,3]
+k = solution.removeDuplicates(nums)
+print(k)  # Output: 5
+print(nums[:k])  # Output: [1, 1, 2, 2, 3]
+
+nums = [0,0,1,1,1,1,2,3,3]
+k = solution.removeDuplicates(nums)
+print(k)  # Output: 7
+print(nums[:k])  # Output: [0, 0, 1, 1, 2, 3, 3]
+
+'Remove Duplicates from Sorted Array II'
+
+from typing import List
+
+class Solution:
+    def removeDuplicates(self, nums: List[int]) -> int:
+        if len(nums) <= 2:
+            return len(nums)
+        k = 2
+        for i in range(2, len(nums)):
+            if nums[i] != nums[k - 2]:
+                nums[k] = nums[i]
+                k += 1
+        return k
+
+# Example usage:
+solution = Solution()
+nums = [1,1,1,2,2,3]
+k = solution.removeDuplicates(nums)
+print(k)  # Output: 5
+print(nums[:k])  # Output: [1, 1, 2, 2, 3]
+
+nums = [0,0,1,1,1,1,2,3,3]
+k = solution.removeDuplicates(nums)
+print(k)  # Output: 7
+print(nums[:k])  # Output: [0, 0, 1, 1, 2, 3, 3]
+
+'Flipping Bits'
+
+from typing import List
+
+class Solution:
+    def minKBitFlips(self, nums: List[int], k: int) -> int:
+        n = len(nums)
+        flip = [0] * n
+        flips = 0
+        flip_effect = 0
+
+        for i in range(n):
+            # Removes the effect of the flip that has gone out of the window
+            if i >= k:
+                flip_effect ^= flip[i - k]
+
+            # Determines the current state of the bit considering flip effects
+            if nums[i] == flip_effect:
+                # If we are at a zero after accounting for flip effects, we need to flip
+                if i + k > n:
+                    # Not enough space to perform a k-length flip
+                    return -1
+                # Performs the flip
+                flip[i] = 1
+                flip_effect ^= 1
+                flips += 1
+
+        return flips
+
+# Example usage:
+solution = Solution()
+print(solution.minKBitFlips([0,1,0], 1))  # Output: 2
+print(solution.minKBitFlips([1,1,0], 2))  # Output: -1
+print(solution.minKBitFlips([0,0,0,1,0,1,1,0], 3))  # Output: 3
+
+'Remove Duplicates'
+
+from typing import List
+
+class Solution:
+    def removeDuplicates(self, nums: List[int]) -> int:
+        if not nums:
+            return 0
+
+        write = 0
+        count = 1  # Counts the occurrences of each element
+
+        for read in range(1, len(nums)):
+            if nums[read] == nums[read - 1]:
+                count += 1
+            else:
+                count = 1
+
+            if count <= 2:
+                write += 1
+                nums[write] = nums[read]
+
+        return write + 1
+
+# Example usages:
+solution = Solution()
+nums = [1,1,1,2,2,3]
+k = solution.removeDuplicates(nums)
+print(k)  # Output: 5
+print(nums[:k])  # Output: [1, 1, 2, 2, 3]
+
+nums = [0,0,1,1,1,1,2,3,3]
+k = solution.removeDuplicates(nums)
+print(k)  # Output: 7
+print(nums[:k])  # Output: [0, 0, 1, 1, 2, 3, 3]
+
+'Major Elements'
+
+from typing import List
+
+class Solution:
+    def majorityElement(self, nums: List[int]) -> int:
+        candidate = None
+        count = 0
+
+        for num in nums:
+            if count == 0:
+                candidate = num
+            count += (1 if num == candidate else -1)
+
+        return candidate
+
+# Example usage:
+solution = Solution()
+print(solution.majorityElement([3,2,3]))  # Output: 3
+print(solution.majorityElement([2,2,1,1,1,2,2]))  # Output: 2
+
+'Zigzag Conversion'
+
+class Solution:
+    def convert(self, s: str, numRows: int) -> str:
+        # Edge cases for numRows being 1 or greater than or equal to the length of s
+        if numRows == 1 or numRows >= len(s):
+            return s
+
+        # Initializes a list for each row
+        rows = [''] * numRows
+        current_row = 0
+        going_down = False
+
+        # Iterates through each character in the string
+        for char in s:
+            rows[current_row] += char
+            # Changes direction at the top or bottom row
+            if current_row == 0 or current_row == numRows - 1:
+                going_down = not going_down
+            # Updates the current row based on the direction
+            current_row += 1 if going_down else -1
+
+        # Concatenates all rows to get the final result
+        return ''.join(rows)
+
+# Example usage:
+solution = Solution()
+print(solution.convert("PAYPALISHIRING", 3))  # Output: "PAHNAPLSIIGYIR"
+
+'Reversing an integer'
+
+class Solution:
+    def reverse(self, x: int) -> int:
+        INT_MAX = 2**31 - 1
+        INT_MIN = -2**31
+
+        # Stores the sign and work with the absolute value
+        sign = -1 if x < 0 else 1
+        x = abs(x)
+
+        reversed_num = 0
+
+        while x != 0:
+            digit = x % 10
+            x //= 10
+
+            # Checks for overflow before actually adding the digit
+            if (reversed_num > INT_MAX // 10) or (reversed_num == INT_MAX // 10 and digit > INT_MAX % 10):
+                return 0
+            if (reversed_num < INT_MIN // 10) or (reversed_num == INT_MIN // 10 and -digit < INT_MIN % 10):
+                return 0
+
+            reversed_num = reversed_num * 10 + digit
+
+        return sign * reversed_num
+
+# Example usage:
+solution = Solution()
+print(solution.reverse(123))  # Output: 321
+print(solution.reverse(-123))  # Output: -321
+print(solution.reverse(120))  # Output: 21
+print(solution.reverse(0))  # Output: 0
+
+'3Sum'
+
+from typing import List
+
+class Solution:
+    def threeSum(self, nums: List[int]) -> List[List[int]]:
+        nums.sort()  # Sort the array
+        result = []
+
+        for i in range(len(nums) - 2):
+            # Avoids duplicates for the first element
+            if i > 0 and nums[i] == nums[i - 1]:
+                continue
+
+            left, right = i + 1, len(nums) - 1
+            while left < right:
+                total = nums[i] + nums[left] + nums[right]
+                if total == 0:
+                    result.append([nums[i], nums[left], nums[right]])
+
+                    # Skips duplicates for the second element
+                    while left < right and nums[left] == nums[left + 1]:
+                        left += 1
+                    # Skips duplicates for the third element
+                    while left < right and nums[right] == nums[right - 1]:
+                        right -= 1
+
+                    left += 1
+                    right -= 1
+                elif total < 0:
+                    left += 1
+                else:
+                    right -= 1
+
+        return result
+
+# Example usage:
+solution = Solution()
+print(solution.threeSum([-1,0,1,2,-1,-4]))  # Expected output: [[-1, -1, 2], [-1, 0, 1]]
+
+'Is Subsequence'
+
+class Solution:
+    def isSubsequence(self, s: str, t: str) -> bool:
+        # Initializes two pointers
+        s_pointer, t_pointer = 0, 0
+
+        # Iterates through both strings
+        while s_pointer < len(s) and t_pointer < len(t):
+            # If characters match, move the s pointer
+            if s[s_pointer] == t[t_pointer]:
+                s_pointer += 1
+            # Always move the t pointer
+            t_pointer += 1
+
+        # Checks if all characters of s were found in t
+        return s_pointer == len(s)
+
+# Example usage:
+solution = Solution()
+print(solution.isSubsequence("abc", "ahbgdc"))  # Output: true
+print(solution.isSubsequence("axc", "ahbgdc"))  # Output: false
+
+'Maximum Area'
+
+from typing import List
+
+class Solution:
+    def maxArea(self, height: List[int]) -> int:
+        left, right = 0, len(height) - 1
+        max_area = 0
+
+        while left < right:
+            # Calculates the width and the height of the container
+            width = right - left
+            container_height = min(height[left], height[right])
+
+            # Calculates the current area
+            current_area = width * container_height
+            max_area = max(max_area, current_area)
+
+            # Moves the pointers
+            if height[left] < height[right]:
+                left += 1
+            else:
+                right -= 1
+
+        return max_area
+
+# Example usage:
+solution = Solution()
+print(solution.maxArea([1,8,6,2,5,4,8,3,7]))  # Output: 49
+
+'Closest Sum To The Target'
+
+from typing import List
+
+class Solution:
+    def threeSumClosest(self, nums: List[int], target: int) -> int:
+        nums.sort()  # Step 1: Sort the array
+        closest_sum = float('inf')  # Initializes with infinity
+
+        for i in range(len(nums) - 2):  # Step 2: Iterate through the array
+            left, right = i + 1, len(nums) - 1
+
+            while left < right:  # Step 3: Two-pointer technique
+                current_sum = nums[i] + nums[left] + nums[right]
+
+                # If the current sum is exactly the target, return it
+                if current_sum == target:
+                    return current_sum
+
+                # Updates closest sum if the current sum is closer to the target
+                if abs(current_sum - target) < abs(closest_sum - target):
+                    closest_sum = current_sum
+
+                # Move the pointers
+                if current_sum < target:
+                    left += 1
+                else:
+                    right -= 1
+
+        return closest_sum  # Returns the closest sum found
+
+# Example usage:
+solution = Solution()
+print(solution.threeSumClosest([-1, 2, 1, -4], 1))  # Output: 2
+print(solution.threeSumClosest([1, 1, 1, 0], -100))  # Output: 2
+
+'Rotate Array'
+
+class Solution:
+    def rotate(self, nums: List[int], k: int) -> None:
+        n = len(nums)
+        k %= n  # To handle cases where k is larger than n
+        nums[:] = nums[-k:] + nums[:-k]
+
+'Best Time to Buy and Sell Stock'
+
+from typing import List
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        min_price = float('inf')
+        max_profit = 0
+
+        for price in prices:
+            if price < min_price:
+                min_price = price
+            else:
+                max_profit = max(max_profit, price - min_price)
+
+        return max_profit
+
+'Best Time to Buy and Sell Stock II'
+
+from typing import List
+
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        min_price = float('inf')
+        max_profit = 0
+
+        for price in prices:
+            if price < min_price:
+                min_price = price
+            elif price - min_price > max_profit:
+                max_profit = price - min_price
+
+        return max_profit
+
+# Example usage:
+solution = Solution()
+print(solution.maxProfit([7,1,5,3,6,4]))  # Output: 5
+print(solution.maxProfit([7,6,4,3,1]))  # Output: 0
+
+'Jump Game'
+
+class Solution:
+    def canJump(self, nums: List[int]) -> bool:
+        max_reachable = 0
+
+        for i, num in enumerate(nums):
+            if i > max_reachable:
+                return False
+            max_reachable = max(max_reachable, i + num)
+
+        return True
+
+'Jump Game II'
+
+class Solution:
+    def jump(self, nums: List[int]) -> int:
+        jumps = 0
+        current_end = 0
+        farthest = 0
+
+        for i in range(len(nums) - 1):
+            farthest = max(farthest, i + nums[i])
+            if i == current_end:
+                jumps += 1
+                current_end = farthest
+
+        return jumps
+
+'H-Index'
+
+class Solution:
+    def hIndex(self, citations: List[int]) -> int:
+        citations.sort(reverse=True)
+        h_index = 0
+
+        for i, c in enumerate(citations):
+            if i + 1 <= c:
+                h_index = i + 1
+            else:
+                break
+
+        return h_index
+
+'Insert Delete GetRandom O(1)'
+
+import random
+
+class RandomizedSet:
+
+    def __init__(self):
+        self.num_to_index = {}
+        self.nums = []
+
+    def insert(self, val: int) -> bool:
+        if val in self.num_to_index:
+            return False
+        self.num_to_index[val] = len(self.nums)
+        self.nums.append(val)
+        return True
+
+    def remove(self, val: int) -> bool:
+        if val not in self.num_to_index:
+            return False
+        # Swaps the element to remove with the last element
+        index = self.num_to_index[val]
+        last_val = self.nums[-1]
+        self.nums[index] = last_val
+        self.num_to_index[last_val] = index
+        # Remove the last element
+        self.nums.pop()
+        del self.num_to_index[val]
+        return True
+
+    def getRandom(self) -> int:
+        return random.choice(self.nums)
+
+
+# obj = RandomizedSet()
+# param_1 = obj.insert(val)
+# param_2 = obj.remove(val)
+# param_3 = obj.getRandom()
+
+'Roman to Integer'
+
+class Solution:
+    def romanToInt(self, s: str) -> int:
+        roman_to_int = {
+            'I': 1,
+            'V': 5,
+            'X': 10,
+            'L': 50,
+            'C': 100,
+            'D': 500,
+            'M': 1000
+        }
+
+        total = 0
+        prev_value = 0
+
+        for char in reversed(s):
+            current_value = roman_to_int[char]
+            if current_value < prev_value:
+                total -= current_value
+            else:
+                total += current_value
+            prev_value = current_value
+
+        return total
+
+'Integer to Roman'
+
+class Solution:
+    def intToRoman(self, num: int) -> str:
+        roman_numerals = [(1000, 'M'), (900, 'CM'), (500, 'D'),(400, 'CD'), (100, 'C'), (90, 'XC'), (50, 'L'), (40, 'XL'), (10, 'X'), (9, 'IX'), (5, 'V'), (4, 'IV'), (1, 'I')]
+        results = []
+        for value, symbol in roman_numerals:
+            while num >= value:
+                results.append(symbol)
+                num -= value
+        return ''.join(results)
+
+'Length of Last Word'
+
+class Solution:
+    def lengthOfLastWord(self, s: str) -> int:
+        return len(s.rstrip().split()[-1])
+
+'Longest Common Prefix'
+
+class Solution:
+    def longestCommonPrefix(self, strs: List[str]) -> str:
+        if not strs:
+            return ""
+
+        prefix = strs[0]
+
+        for string in strs[1:]:
+            while not string.startswith(prefix):
+                prefix = prefix[:-1]
+                if not prefix:
+                    return ""
+
+        return prefix
+
+'Reverse Words in a String'
+
+class Solution:
+    def reverseWords(self, s: str) -> str:
+        return ' '.join(s.split()[::-1])
+
+'Find the Index of the First Occurrence in a String'
+
+class Solution:
+    def strStr(self, haystack: str, needle: str) -> int:
+        if not needle:
+            return 0
+        return haystack.find(needle)
+
+
+'Valid Palindrome'
+
+class Solution:
+    def isPalindrome(self, s: str) -> bool:
+        # Step 1: Preprocess the string
+        filtered_chars = [char.lower() for char in s if char.isalnum()]
+        filtered_str = ''.join(filtered_chars)
+
+        # Step 2: Checks if the filtered string is a palindrome
+        return filtered_str == filtered_str[::-1]
+
+# Example usage:
+solution = Solution()
+print(solution.isPalindrome("A man, a plan, a canal: Panama"))  # Output: true
+print(solution.isPalindrome("race a car"))  # Output: false
+
+'Container With Most Water'
+
+class Solution:
+    def maxArea(self, height: List[int]) -> int:
+        left, right = 0, len(height) - 1
+        max_water = 0
+
+        while left < right:
+            width = right - left
+            max_water = max(max_water, min(height[left], height[right]) * width)
+
+            if height[left] < height[right]:
+                left += 1
+            else:
+                right -= 1
+        return max_water
+
+'Longest Substring Without Repeating Characters'
+
+class Solution:
+    def lengthOfLongestSubstring(self, s: str) -> int:
+        char_set = set()
+        left = 0
+        max_length = 0
+
+        for right in range(len(s)):
+            while s[right] in char_set:
+                char_set.remove(s[left])
+                left += 1
+            char_set.add(s[right])
+            max_length = max(max_length, right - left + 1)
+
+        return max_length
+
+'Two Sum'
+
+class Solution:
+    def twoSum(self, nums: List[int], target: int) -> List[int]:
+        hashmap = {}
+        for i, num in enumerate(nums):
+            complement = target - num
+            if complement in hashmap:
+                return [hashmap[complement], i]
+            hashmap[num] = i
+
+# Example usage:
+solution = Solution()
+result = solution.twoSum([2, 7, 11, 15], 9)  # Output: [0, 1]
+print(result)
+
+'Valid Parentheses'
+
+class Solution:
+    def isValid(self, s: str) -> bool:
+        # Defines a mapping of closing to opening brackets
+        bracket_map = {')': '(', '}': '{', ']': '['}
+        stack = []
+
+        # Iterates through each character in the string
+        for char in s:
+            if char in bracket_map:
+                # Pops the topmost element from the stack if it is not empty, otherwise use a dummy value
+                top_element = stack.pop() if stack else '#'
+
+                # The mapping for the closing bracket doesn't match the stack's top element
+                if bracket_map[char] != top_element:
+                    return False
+            else:
+                # It's an opening bracket, push onto the stack
+                stack.append(char)
+
+        # If the stack is empty, all the brackets are matched correctly
+        return not stack
+
+# Example usage:
+solution = Solution()
+print(solution.isValid("()"))  # Output: True
+print(solution.isValid("()[]{}"))  # Output: True
+print(solution.isValid("(]"))  # Output: False
+print(solution.isValid("([)]"))  # Output: False
+print(solution.isValid("{[]}"))  # Output: True
+
+'Merge Two Sorted Lists'
+
+from typing import Optional
+
+class ListNode:
+    def __init__(self, val=0, next: Optional['ListNode'] = None):
+        self.val = val
+        self.next = next
+
+
+class Solution:
+    def mergeTwoLists(self, list1: Optional['ListNode'], list2: Optional['ListNode']) -> Optional['ListNode']:
+        dummy = ListNode()
+        current = dummy
+
+        while list1 and list2:
+            if list1.val < list2.val:
+                current.next = list1
+                list1 = list1.next
+            else:
+                current.next = list2
+                list2 = list2.next
+            current = current.next
+
+        if list1:
+            current.next = list1
+        if list2:
+            current.next = list2
+
+        return dummy.next
+
+# Example usage:
+# Creates ListNode objects for list1: 1 -> 2 -> 4
+list1 = ListNode(1, ListNode(2, ListNode(4)))
+
+# Creates ListNode objects for list2: 1 -> 3 -> 4
+list2 = ListNode(1, ListNode(3, ListNode(4)))
+
+# Instantiates Solution and call mergeTwoLists
+solution = Solution()
+result = solution.mergeTwoLists(list1, list2)
+
+# Print merged list
+while result:
+    print(result.val, end=" -> " if result.next else "")
+    result = result.next
+
+'Merge K Number of Sorted Lists'
+
+from typing import List, Optional
+import heapq
+
+class ListNode:
+    def __init__(self, val=0, next: Optional['ListNode'] = None):
+        self.val = val
+        self.next = next
+
+class Solution:
+    def mergeKLists(self, lists: List[Optional['ListNode']]) -> Optional['ListNode']:
+        min_heap = []
+
+        # Initializes the heap with the head of each list
+        for i, l in enumerate(lists):
+            if l:
+                heapq.heappush(min_heap, (l.val, i, l))
+
+        dummy = ListNode()
+        current = dummy
+
+        while min_heap:
+            val, i, node = heapq.heappop(min_heap)
+            current.next = node
+            current = current.next
+            if node.next:
+                heapq.heappush(min_heap, (node.next.val, i, node.next))
+
+        return dummy.next
+
+# Example usage:
+# Creates ListNode objects for list1: 1 -> 4 -> 5
+list1 = ListNode(1, ListNode(4, ListNode(5)))
+
+# Creates ListNode objects for list2: 1 -> 3 -> 4
+list2 = ListNode(1, ListNode(3, ListNode(4)))
+
+# Creates ListNode objects for list3: 2 -> 6
+list3 = ListNode(2, ListNode(6))
+
+# Instantiates Solution and call mergeKLists
+solution = Solution()
+result = solution.mergeKLists([list1, list2, list3])
+
+# Prints merged list
+while result:
+    print(result.val, end=" -> " if result.next else "")
+    result = result.next
+
+'Median of Two Sorted Arrays'
+
+class Solution:
+    def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -> float:
+        nums = nums1 + nums2
+        nums.sort()
+        n = len(nums)
+        if n % 2 == 1:
+            return float(nums[n // 2])
+        else:
+            return (nums[n // 2 - 1] + nums[n // 2]) / 2
+
+# Example usage
+solution = Solution()
+print(solution.findMedianSortedArrays([1, 3], [2]))  # Output: 2.0
+
+'Palindrome Number'
+
+class Solution:
+    def isPalindrome(self, x: int) -> bool:
+        if x < 0:
+            return False
+        original = x
+        reversed_num = 0
+        while x > 0:
+            reversed_num = reversed_num * 10 + x % 10
+            x //= 10
+        return original == reversed_num
+
+# Example usage
+solution = Solution()
+print(solution.isPalindrome(121))  # Output: True
+
+'Sqrt(x)'
+
+class Solution:
+    def mySqrt(self, x: int) -> int:
+        if x == 0:
+            return 0
+        left, right = 1, x
+        while left <= right:
+            mid = (left + right) // 2
+            if mid * mid == x:
+                return mid
+            elif mid * mid < x:
+                left = mid + 1
+            else:
+                right = mid - 1
+        return right
+
+# Example usage
+solution = Solution()
+print(solution.mySqrt(8))  # Output: 2
+
+'Climbing Stairs'
+
+class Solution:
+    def climbStairs(self, n: int) -> int:
+        if n == 1:
+            return 1
+        if n == 2:
+            return 2
+
+        dp = [0] * (n + 1)
+        dp[1] = 1
+        dp[2] = 2
+
+        for i in range(3, n + 1):
+            dp[i] = dp[i - 1] + dp[i - 2]
+
+        return dp[n]
+
+# Example usage:
+solution = Solution()
+print(solution.climbStairs(2))  # Output: 2
+print(solution.climbStairs(3))  # Output: 3
+print(solution.climbStairs(4))  # Output: 5
+print(solution.climbStairs(5))  # Output: 8
+
+'Longest Palindromic Substring'
+
+class Solution:
+    def longestPalindrome(self, s: str) -> str:
+        def expand_around_center(left: int, right: int) -> str:
+            while left >= 0 and right < len(s) and s[left] == s[right]:
+                left -= 1
+                right += 1
+            return s[left + 1:right]
+
+        longest = ""
+        for i in range(len(s)):
+            # Odd length palindrome
+            odd_palindrome = expand_around_center(i, i)
+            if len(odd_palindrome) > len(longest):
+                longest = odd_palindrome
+            # Even length palindrome
+            even_palindrome = expand_around_center(i, i + 1)
+            if len(even_palindrome) > len(longest):
+                longest = even_palindrome
+
+        return longest
+
+# Example usage
+solution = Solution()
+print(solution.longestPalindrome("babad"))  # Output: "bab" or "aba"
+
+'Longest Path With Different Adjacent Characters'
+
+from collections import defaultdict
+
+class Solution:
+    def longestPath(self, parent: List[int], s: str) -> int:
+
+        tree = defaultdict(list)
+        for child, par in enumerate(parent):
+            if par != -1:
+                tree[par].append(child)
+
+        self.max_path = 0
+
+        def dfs(node):
+
+            if node not in tree:
+                return 1
+
+            max_len1, max_len2 = 0, 0
+            for child in tree[node]:
+                child_len = dfs(child)
+                if s[child] != s[node]:
+                    if child_len > max_len1:
+                        max_len2 = max_len1
+                        max_len1 = child_len
+                    elif child_len > max_len2:
+                        max_len2 = child_len
+
+            self.max_path = max(self.max_path, max_len1 + max_len2 + 1)
+            return max_len1 + 1
+
+
+        if len(parent) == 1:
+            return 1
+
+        dfs(0)
+        return self.max_path
+
+'Fibonacci Number'
+
+class Solution:
+    def fib(self, n: int) -> int:
+        if n == 0:
+            return 0
+        elif n == 1:
+            return 1
+
+        # Initialize the first two Fibonacci numbers
+        a, b = 0, 1
+        for _ in range(2, n + 1):
+            a, b = b, a + b
+
+        return b
+solution = Solution()
+print(solution.fib(5))  # Output: 5
+
+'Gas Station'
+from typing import List
+class Solution:
+    def canCompleteCircuit(self, gas: List[int], cost: List[int]) -> int:
+        total_gas, total_cost, start_index, tank = 0, 0, 0, 0
+        
+        for i in range(len(gas)):
+            total_gas += gas[i]
+            total_cost += cost[i]
+            tank += gas[i] - cost[i]
+            
+            if tank < 0:
+                start_index = i + 1
+                tank = 0
+        
+        return start_index if total_gas >= total_cost else -1
+
+'Minimum Size Subarray Sum'
+class Solution:
+    def minSubArrayLen(self, target: int, nums: List[int]) -> int:
+        n = len(nums)
+        left = 0
+        total = 0
+        min_length = float('inf')
+        
+        for right in range(n):
+            total += nums[right]
+            
+            while total >= target:
+                min_length = min(min_length, right - left + 1)
+                total -= nums[left]
+                left += 1
+        
+        return min_length if min_length != float('inf') else 0
+
+'Rotate Image'
+class Solution:
+    def rotate(self, matrix: List[List[int]]) -> None:
+        n = len(matrix)
+        
+        # Transpose the matrix
+        for i in range(n):
+            for j in range(i, n):
+                matrix[i][j], matrix[j][i] = matrix[j][i], matrix[i][j]
+        
+        # Reverse each row
+        for row in matrix:
+            row.reverse()
+
+'Game of Life'
+class Solution:
+    def gameOfLife(self, board: List[List[int]]) -> None:
+        m, n = len(board), len(board[0])
+
+        def count_live_neighbors(x, y):
+            directions = [(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)]
+            count = 0
+            for dx, dy in directions:
+                nx, ny = x + dx, y + dy
+                if 0 <= nx < m and 0 <= ny < n and abs(board[nx][ny]) == 1:
+                    count += 1
+            return count
+
+        for i in range(m):
+            for j in range(n):
+                live_neighbors = count_live_neighbors(i, j)
+                
+
+                if board[i][j] == 1 and (live_neighbors < 2 or live_neighbors > 3):
+                    board[i][j] = -1  
+                
+
+                if board[i][j] == 0 and live_neighbors == 3:
+                    board[i][j] = 2  
+
+        for i in range(m):
+            for j in range(n):
+                if board[i][j] > 0:
+                    board[i][j] = 1 
+                else:
+                    board[i][j] = 0 
 
